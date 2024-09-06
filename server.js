@@ -6,7 +6,7 @@ const ClientRouter = require('./router/ClientRouter')
 const { config } = require('dotenv');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['http://localhost:5173', 'https://travelservice.netlify.app'];
 config();
 
 //Middlewares
@@ -32,7 +32,7 @@ app.use(cors({
     credentials: true
 }));
 
-app.use('/client', ClientRouter)
+app.use('/client', ClientRouter);
 
 app.listen(PORT, () => {
     console.log(`server is running on ${PORT}`)

@@ -5,24 +5,22 @@ const dotenv = require('dotenv')
 
 dotenv.config();
 const signupController = async (req, res) => {
-
-    console.log(req.body);
-
-    const dublicateClient = await client.findOne({ email: req.body.email })
-
-    if (dublicateClient) return res.status(409).json({ "message": "client Already Exit" })
-
-    const hashPassword = await bcrypt.hash(req.body.password, 10)
-
-    const registering = await new client({
-        fullName: req.body.fullName,
-        email: req.body.email,
-        password: hashPassword,
-        mobile: req.body.mobile
-    })
-    registering.save()
-
-    return res.status(200).json({ "message": "Signup Successfully" })
+    const { email, password, fullName, mobile } = req.body;
+    try {
+        const dublicateClient = await client.findOne({ email: email })
+        if (dublicateClient) return res.status(409).json({ "message": "client Already Exit" })
+        const hashPassword = await bcrypt.hash(password, 10)
+        const registering = await new client({
+            fullName: fullName,
+            email: email,
+            password: hashPassword,
+            mobile: mobile
+        })
+        registering.save();
+        return res.status(200).json({ "message": "Signup Successfully" })
+    } catch (error) {
+        throw error;
+    }
 
 }
 
