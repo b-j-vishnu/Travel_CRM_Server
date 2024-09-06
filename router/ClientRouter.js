@@ -3,7 +3,7 @@ const { signupController, loginController, logoutController, verifyToken } = req
 
 const router = express.Router()
 
-router.get('/verify', verifyToken)
+//router.get('/verify', verifyToken)
 router.post('/signup', signupController)
 router.post('/login', loginController)
 router.get('/logout', logoutController)

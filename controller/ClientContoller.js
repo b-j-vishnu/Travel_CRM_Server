@@ -38,8 +38,10 @@ const loginController = async (req, res) => {
     const token = jwt.sign({ id: existsClient._id }, process.env.token, { expiresIn: '1d' })
     res.cookie('token', token, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true })
         .status(200).json({
-            message: "login successfully"
+            message: "login successfully",
+            token
         });
+
 }
 const logoutController = async (req, res) => {
     return res.clearCookie('token', { maxAge: 24 * 60 * 60 * 1000, httpOnly: true }).json({ "message": 'logout successfully' })
