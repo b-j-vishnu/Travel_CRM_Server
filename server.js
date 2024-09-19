@@ -2,7 +2,9 @@ const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
 const PORT = 4000
-const ClientRouter = require('./router/ClientRouter')
+const RegisterRouter = require('./router/RegistrationRouter')
+const LeadsRouter = require('./router/LeadsRouter')
+
 const { config } = require('dotenv');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
@@ -17,6 +19,7 @@ app.use(express.urlencoded({ extended: false }))
 mongoose.connect(process.env.MONGODB_URL)
     .then((res) => {
         console.log(`DB is Connected`);
+        console.log(`Database Name: ${res.connection.db.databaseName}`)
     }).catch((err) => {
         console.log(err);
 
@@ -32,7 +35,9 @@ app.use(cors({
     credentials: true
 }));
 
-app.use('/client', ClientRouter);
+app.use('/', RegisterRouter);
+app.use('/leads', LeadsRouter)
+
 
 app.listen(PORT, () => {
     console.log(`server is running on ${PORT}`)
