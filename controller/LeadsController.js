@@ -1,7 +1,9 @@
 const leads = require('../model/LeadsModels')
+const getNextUserID = require('../controller/getId')
 
 const AddLeads = async (req, res) => {
-    console.log(req.body)
+
+
     try {
         const newLead = await new leads({
             firstName: req.body.firstName,
@@ -10,7 +12,7 @@ const AddLeads = async (req, res) => {
             mobile: req.body.mobile,
             email: req.body.email,
             executiveName: req.body.executiveName,
-            dealStage: req.body.dealStage,
+            stage: req.body.stage,
             dealValue: req.body.dealValue,
             followUpDate: new Date(req.body.followUpDate),
             expectedClosureDate: new Date(req.body.expectedClosureDate),
@@ -19,12 +21,13 @@ const AddLeads = async (req, res) => {
             destination: req.body.destination,
             billingAmount: req.body.billingAmount,
             paid: req.body.paid,
-            balanceAmount: req.body.balanceAmount
+            balancePayment: req.body.balancePayment
 
         });
         if (!newLead) return res.status(400).json({ message: "New lead have error" });
+
         await newLead.save();
-        res.status(201).json({
+        res.status(200).json({
             message: "Leads Created Successfully",
             data: newLead
         });
@@ -41,7 +44,7 @@ const getLeads = async (req, res) => {
 const filterLeads = async (req, res) => {
     console.log(req.body)
     const filteredLeads = await leads.find({
-        dealStage: req.body.dealStage,
+        stage: req.body.stage,
         enquiryType: req.body.enquiryType,
         package: req.body.package,
         mobile: req.body.mobileNumber,
@@ -62,4 +65,36 @@ const bundleLeadsDelete = async (req, res) => {
     const deletedDeals = await leads.deleteMany({ userId: { $in: userIds } })
     return res.status(200).json({ message: "successfully deleted " })
 }
-module.exports = { AddLeads, getLeads, filterLeads, deleteLead, bundleLeadsDelete }
+const editLead = async (req, res) => {
+    console.log(req.params)
+    const { userId } = req.params
+    try {
+        const updatedLead = await leads.findOneAndUpdate({ userId: { $eq: userId } }, {
+            $set: {                    // Update fields using $set
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                enquiryType: req.body.enquiryType,
+                mobile: req.body.mobile,
+                email: req.body.email,
+                executiveName: req.body.executiveName,
+                stage: req.body.stage,
+                dealValue: req.body.dealValue,
+                followUpDate: new Date(req.body.followUpDate),
+                expectedClosureDate: new Date(req.body.expectedClosureDate),
+                package: req.body.package,
+                plannedNoOfDays: req.body.plannedNoOfDays,
+                destination: req.body.destination,
+                billingAmount: req.body.billingAmount,
+                paid: req.body.paid,
+                balancePayment: req.body.balancePayment
+            }
+        },
+            { new: true }
+        )
+
+        updatedLead.save()
+        return res.status(200).json({ message: "Updated SuccessFully" })
+    }
+    catch (err) { console.log(err) }
+}
+module.exports = { AddLeads, getLeads, filterLeads, deleteLead, bundleLeadsDelete, editLead }

@@ -1,10 +1,11 @@
 const express = require('express')
-const { AddLeads, getLeads, filterLeads, deleteLead, bundleLeadsDelete } = require('../controller/LeadsController')
+const { AddLeads, getLeads, filterLeads, deleteLead, bundleLeadsDelete, editLead } = require('../controller/LeadsController')
 const router = express.Router()
 
-router.post('/addLeads', AddLeads)
 router.get('/getLeads', getLeads)
+router.post('/addLeads', AddLeads)
 router.post('/filterLeads', filterLeads)
+router.put('/editLead/:userId', editLead)
 router.delete('/deleteLead/:userId', deleteLead)
 router.delete('/bundleLeadsDelete', bundleLeadsDelete)
 

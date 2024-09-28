@@ -1,8 +1,9 @@
 const mongoose = require('mongoose')
 const getNextUserID = require('../controller/getId')
-const leadSchema = mongoose.Schema({
+
+const CustomerSchema = mongoose.Schema({
     firstName: {
-        type: String,
+        type: String
     },
     lastName: {
         type: String
@@ -14,34 +15,28 @@ const leadSchema = mongoose.Schema({
         type: Number
     },
     email: {
-        type: String,
-        unique: true,
-        required: true,
-        trim: true
+        type: String
     },
-    executiveName: {
+    package: {
         type: String
     },
     stage: {
         type: String
     },
-    dealValue: {
+    executiveName: {
         type: String
     },
-    followUpDate: {
-        type: Date,
+    startDate: {
+        type: Date
     },
-    expectedClosureDate: {
-        type: Date,
+    endDate: {
+        type: Date
     },
-    package: {
-        type: String
-    },
-    plannedNoOfDays: {
+    noOfAdults: {
         type: Number
     },
-    destination: {
-        type: String
+    noOfChildren: {
+        type: Number
     },
     billingAmount: {
         type: Number
@@ -57,21 +52,19 @@ const leadSchema = mongoose.Schema({
         unique: true
     }
 })
-leadSchema.pre('save', async function (next) {
-    const lead = this;
-
-    // Only generate a new userId if this is a new document
-    if (lead.isNew) {
+CustomerSchema.pre('save', async function (next) {
+    const customer = this;
+    if (customer.isNew) {
         try {
             const userId = await getNextUserID(); // Generate userId
-            lead.userId = userId;  // Assign the userId to the document
+            customer.userId = userId;  // Assign the userId to the document
         } catch (error) {
             return next(error);  // If there's an error, pass it to next()
         }
     }
+    next();
 
-    next(); // Call next() to proceed with the save
 });
 
 
-module.exports = mongoose.model('leads', leadSchema)
+module.exports = mongoose.model('customer', CustomerSchema)
