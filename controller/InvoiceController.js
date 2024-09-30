@@ -7,7 +7,7 @@ const getInvoices = async (req, res) => {
         return res.status(200).json({ Invoices })
     }
     catch (err) {
-        return res.send(400).json({ message: "Something went wrong when fetching invoices" })
+        return res.status(400).json({ message: "Something went wrong when fetching invoices" })
     }
 }
 
@@ -30,7 +30,8 @@ const addInvoices = async (req, res) => {
         mobile: req.body.mobile,
         email: req.body.email,
         destinationTemplate: req.body.destinationTemplate,
-        fullName: req.body.fullName,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
         userId: req.body.userId,
         total: req.body.total,
         pending: req.body.pending,
@@ -128,7 +129,7 @@ const generateExcelSheets = async (req, res) => {
         const invoice = [
             ['UserId', "Name", "Email", "Mobile", "ExecutiveName", "AcceptPaymentVia", "Total", "Pending", "ProposalDate", "ValidDate", "DestinationTemplate", "Status"]
         ]
-        invoiceDatas.forEach((data) => invoice.push([data.userId, data.fullName, data.email, data.mobile, data.executiveName, data.acceptPaymentVia, data.total, data.pending, data.proposalDate, data.validDate, data.destinationTemplate, data.status]))
+        invoiceDatas.forEach((data) => invoice.push([data.userId, `${data.firstName} ${data.lastName}`, data.email, data.mobile, data.executiveName, data.acceptPaymentVia, data.total, data.pending, data.proposalDate, data.validDate, data.destinationTemplate, data.status]))
 
         const workbook = XLSX.utils.book_new();
         const worksheet = XLSX.utils.aoa_to_sheet(invoice)

@@ -1,6 +1,7 @@
-const mongoose = require('mongoose')
-const getNextUserID = require('../controller/getId')
-const leadSchema = mongoose.Schema({
+const mongoose = require('mongoose');
+const getNextUserID = require('../controller/getId');
+
+const leadSchema = new mongoose.Schema({
     firstName: {
         type: String,
     },
@@ -15,9 +16,9 @@ const leadSchema = mongoose.Schema({
     },
     email: {
         type: String,
-        unique: true,
+        unique: true, // Mark email as unique
         required: true,
-        trim: true
+        trim: true,
     },
     executiveName: {
         type: String
@@ -52,15 +53,21 @@ const leadSchema = mongoose.Schema({
     balancePayment: {
         type: Number
     },
-    userId: {    // Add this field for storing userId
+    userId: {
         type: String,
-        unique: true
+        unique: true // Mark userId as unique
     }
-})
+}, {
+    autoCreate: true // Ensure collection is auto-created with indexes
+});
+
+// Create unique indexes for email and userId
+leadSchema.index({ email: 1 }, { unique: true });
+leadSchema.index({ userId: 1 }, { unique: true });
+
 leadSchema.pre('save', async function (next) {
     const lead = this;
 
-    // Only generate a new userId if this is a new document
     if (lead.isNew) {
         try {
             const userId = await getNextUserID(); // Generate userId
@@ -73,5 +80,10 @@ leadSchema.pre('save', async function (next) {
     next(); // Call next() to proceed with the save
 });
 
+// Model definition
+const Lead = mongoose.model('leads', leadSchema);
 
-module.exports = mongoose.model('leads', leadSchema)
+// Explicitly create indexes
+Lead.createIndexes();
+
+module.exports = Lead;

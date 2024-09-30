@@ -38,7 +38,7 @@ const AddLeads = async (req, res) => {
 }
 
 const getLeads = async (req, res) => {
-    const allLeads = await leads.find()
+    const allLeads = await leads.find();
     return res.status(200).json({ allLeads })
 }
 const filterLeads = async (req, res) => {
@@ -63,6 +63,7 @@ const bundleLeadsDelete = async (req, res) => {
     console.log(req.body.dataToDelete)
     const userIds = req.body.dataToDelete
     const deletedDeals = await leads.deleteMany({ userId: { $in: userIds } })
+    if (!deletedDeals) return res.status(404).json({ message: "There is no lead data to delete " })
     return res.status(200).json({ message: "successfully deleted " })
 }
 const editLead = async (req, res) => {

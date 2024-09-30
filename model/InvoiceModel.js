@@ -23,7 +23,9 @@ const InvoiceSchema = mongoose.Schema({
     destinationTemplate: {
         type: String
     },
-    fullName: {
+    firstName: {
+        type: String
+    }, lastName: {
         type: String
     },
     userId: {

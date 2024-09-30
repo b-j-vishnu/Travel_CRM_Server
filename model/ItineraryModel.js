@@ -30,6 +30,7 @@ const ItinerarySchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    plannedNoOfDays: { type: Number },
 
     destinationTemplate: {
         type: String,
@@ -47,7 +48,10 @@ const ItinerarySchema = mongoose.Schema({
         type: String,
         required: true,
     },
-    fullName: {
+    firstName: {
+        type: String,
+        required: true,
+    }, lastName: {
         type: String,
         required: true,
     },

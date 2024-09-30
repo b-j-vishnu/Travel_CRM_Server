@@ -20,7 +20,9 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.urlencoded({ extended: false }))
 
-mongoose.connect(process.env.MONGODB_URL)
+mongoose.connect(process.env.MONGODB_URL, {
+    autoIndex: true // Ensure autoIndex is enabled
+})
     .then((res) => {
         console.log(`DB is Connected`);
         console.log(`Database Name: ${res.connection.db.databaseName}`)
@@ -52,13 +54,13 @@ app.listen(PORT, () => {
 })
 
 //// Get the current time in IST
-//const currentIST = new Date();
-
+const currentIST = new Date(new Date().getTime() + (5.5 * 60 * 60 * 1000));
+console.log(currentIST)
 //// Get current hours, minutes, seconds, and milliseconds in IST
-//const hours = currentIST.getHours();
-//const minutes = currentIST.getMinutes();
-//const seconds = currentIST.getSeconds();
-//const ms = currentIST.getMilliseconds();
+const hours = currentIST.getHours();
+const minutes = currentIST.getMinutes();
+const seconds = currentIST.getSeconds();
+const ms = currentIST.getMilliseconds();
 
 //// Constructing a date from the fixed date and current time components
 //const fixedDate = new Date("2024-05-24");
